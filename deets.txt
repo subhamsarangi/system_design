@@ -1,0 +1,3 @@
+install pyjwt jedi pylint
+
+set MYSQL_HOST=localhost 
