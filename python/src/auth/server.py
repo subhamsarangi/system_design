@@ -37,7 +37,27 @@ def login():
             return TOKEN 
     else:
         return "user not found", 401
+
+@server.route("/validate", methods=["POST"])
+def validate():
+    encoded_jwt = request.headers["Authorization"]
+    if not encoded_jwt:
+        return "missing creds", 401
     
+    encoded_jwt = encoded_jwt.split(" ")[1]
+
+    try:
+        decoded = jwt.decode(
+            encoded_jwt, os.environ.get("JWT_SECRET"), 
+            algorithm=["HS256"]
+        )
+    except:
+        return "not authorized", 403
+
+    return decoded, 200
+
+
+
 def createJWT(username, secret, authz):
     """authz True is admin"""
     return jwt.encode(
